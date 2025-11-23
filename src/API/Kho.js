@@ -32,3 +32,4 @@ export const getStockByProduct = async (masp) => {
   const res = await api.get(`/kho/sp/${masp}`);
   return res.data;
 };
+
