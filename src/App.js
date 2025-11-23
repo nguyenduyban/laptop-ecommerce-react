@@ -34,6 +34,10 @@ import "./echo.js";
 import AdminComment from "./pages/admincomments.js";
 import AdminAccount from "./pages/adminAccount.js";
 import AdminAccountDetail from "./pages/adminaccountdetail.js";
+import AdminCarousel from "./pages/admincarousel.js";
+import AddKhoDetail from "./pages/addkhodetail.js";
+import Khodetail from "./pages/khodetail.js";
+import AdminNhaCungCap from "./pages/adminnhacungcap.js";
 
 function App() {
   return (
@@ -51,8 +55,24 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="/admin/product" element={<AdminProducts />} />
-            <Route path="/admin/product/add" element={<AddProduct />} />
+
+            <Route
+              path="/admin/product"
+              element={
+                <ProtectedRoute allowedLoaiTK={[1]}>
+                  <AdminProducts />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/product/add"
+              element={
+                <ProtectedRoute allowedLoaiTK={[1]}>
+                  <AddProduct />
+                </ProtectedRoute>
+              }
+            />
 
             <Route
               path="/admin/chat"
@@ -62,20 +82,121 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/admin/product/edit/:masp"
-              element={<AdminProductUpdate />}
+              element={
+                <ProtectedRoute allowedLoaiTK={[1]}>
+                  <AdminProductUpdate />
+                </ProtectedRoute>
+              }
             />
-            <Route path="/admin/comments" element={<AdminComment />} />
-            <Route path="/admin/account" element={<AdminAccount />} />
-            <Route path="/admin/account/:id" element={<AdminAccountDetail />} />
-            <Route path="/admin/order" element={<AdminDonHang />} />
-            <Route path="/admin/kho" element={<AdminKho />} />
 
-            <Route path="/admin/brand" element={<AdminHang />} />
-            <Route path="/admin/categories" element={<AdminDanhMuc />} />
+            <Route
+              path="/admin/kho-detail/:masp"
+              element={
+                <ProtectedRoute allowedLoaiTK={[1]}>
+                  <Khodetail />
+                </ProtectedRoute>
+              }
+            />
 
-            <Route path="/admin/topic" element={<ChuyenMucManager />} />
+            <Route
+              path="/admin/add-kho-detail/:masp"
+              element={
+                <ProtectedRoute allowedLoaiTK={[1]}>
+                  <AddKhoDetail />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/comments"
+              element={
+                <ProtectedRoute allowedLoaiTK={[1]}>
+                  <AdminComment />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/account"
+              element={
+                <ProtectedRoute allowedLoaiTK={[1]}>
+                  <AdminAccount />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/account/:id"
+              element={
+                <ProtectedRoute allowedLoaiTK={[1]}>
+                  <AdminAccountDetail />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/order"
+              element={
+                <ProtectedRoute allowedLoaiTK={[1]}>
+                  <AdminDonHang />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/kho"
+              element={
+                <ProtectedRoute allowedLoaiTK={[1]}>
+                  <AdminKho />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/carousel"
+              element={
+                <ProtectedRoute allowedLoaiTK={[1]}>
+                  <AdminCarousel />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/brand"
+              element={
+                <ProtectedRoute allowedLoaiTK={[1]}>
+                  <AdminHang />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/nhacungcap"
+              element={
+                <ProtectedRoute allowedLoaiTK={[1]}>
+                  <AdminNhaCungCap />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/categories"
+              element={
+                <ProtectedRoute allowedLoaiTK={[1]}>
+                  <AdminDanhMuc />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/topic"
+              element={
+                <ProtectedRoute allowedLoaiTK={[1]}>
+                  <ChuyenMucManager />
+                </ProtectedRoute>
+              }
+            />
 
             <Route
               path="/checkout"
