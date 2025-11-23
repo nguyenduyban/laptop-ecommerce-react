@@ -19,7 +19,6 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  // 🟦 Dữ liệu bình luận
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [loadingComments, setLoadingComments] = useState(true);
@@ -53,7 +52,6 @@ const ProductDetail = () => {
       </p>
     );
 
-  // 🛒 Thêm giỏ hàng
   const handleAddToCart = () => {
     addToCart(product);
     Swal.fire({
@@ -64,7 +62,6 @@ const ProductDetail = () => {
     });
   };
 
-  // 💬 Gửi bình luận
   const handleSubmitComment = async (e) => {
     e.preventDefault();
     if (!user) {
@@ -89,19 +86,20 @@ const ProductDetail = () => {
   return (
     <div className="detail-page py-5">
       <div className="container">
-        {/* Thông tin sản phẩm */}
+        {/* THÔNG TIN SẢN PHẨM */}
         <div className="row bg-white rounded-4 p-4 shadow-sm border">
           <div className="col-md-6 text-center">
             <img
               src={`https://ecommerce-laravel.up.railway.app/storage/img/${product.anhdaidien}`}
               alt={product.tensp}
-              className="img-fluid rounded-4 main-image mb-3"
-              style={{ maxHeight: "400px", objectFit: "cover" }}
+              className="img-fluid rounded-4 mb-3"
+              style={{ maxHeight: "420px", objectFit: "cover" }}
             />
           </div>
 
           <div className="col-md-6 ps-md-5">
             <h3 className="fw-bold text-dark mb-3">{product.tensp}</h3>
+
             <h4 className="text-primary fw-bold mb-2">
               {formatPrice(product.giamoi)}
             </h4>
@@ -112,17 +110,61 @@ const ProductDetail = () => {
               </p>
             )}
 
-            <p className="text-secondary small mb-4">
-              {product.mota?.substring(0, 120) || "Sản phẩm chất lượng cao."}
-            </p>
+            {/* CAM KẾT */}
+            <div className="product-commit-box mt-4">
+              <h5 className="fw-bold mb-3 text-dark">Cam kết sản phẩm</h5>
 
-            <div className="d-flex gap-3">
+              <div className="row g-3">
+                <div className="col-6">
+                  <div className="p-3 rounded-4 bg-light border h-50% shadow-sm">
+                    <i className="bi bi-box-seam text-danger fs-4 icon-bg"></i>
+                    <p className="mt-2 mb-0 text-secondary">
+                      Nguyên hộp, đầy đủ phụ kiện từ nhà sản xuất.
+                      <br />
+                      Bảo hành pin và bộ sạc 12 tháng.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="col-6">
+                  <div className="p-3 rounded-4 bg-light border h-50% shadow-sm">
+                    <i className="bi bi-shield-check text-danger fs-4 icon-bg"></i>
+                    <p className="mt-2 mb-0 text-secondary">
+                      Bảo hành 1 đổi 1 trong 12 tháng bởi Nhà Phân Phối.
+                      <br />
+                      Áp dụng tại FPT Service toàn quốc.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="col-6">
+                  <div className="p-3 rounded-4 bg-light border h-50% shadow-sm">
+                    <i className="bi bi-gear-wide-connected text-danger fs-4 icon-bg"></i>
+                    <p className="mt-2 mb-1 text-secondary">
+                      Bộ nguồn, máy và sách hướng dẫn đầy đủ.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="col-6">
+                  <div className="p-3 rounded-4 bg-light border h-50% shadow-sm">
+                    <i className="bi bi-receipt text-danger fs-4 icon-bg"></i>
+                    <p className="mt-2 mb-0 text-secondary">
+                      Giá sản phẩm <strong>đã bao gồm VAT</strong>.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="d-flex gap-3 mt-4">
               <button
                 onClick={handleAddToCart}
                 className="btn btn-outline-primary fw-semibold px-4 rounded-pill"
               >
                 <i className="bi bi-cart-plus me-2"></i>Thêm vào giỏ hàng
               </button>
+
               <button
                 className="btn btn-primary fw-semibold px-4 rounded-pill"
                 onClick={() => navigate("/checkout")}
@@ -133,9 +175,9 @@ const ProductDetail = () => {
           </div>
         </div>
 
-        {/* Tabs */}
+        {/* TAB MÔ TẢ + BÌNH LUẬN */}
         <div className="mt-5 bg-white rounded-4 p-4 shadow-sm border">
-          <ul className="nav nav-tabs mb-4" id="productTab">
+          <ul className="nav nav-tabs mb-4">
             <li className="nav-item">
               <button
                 className="nav-link active fw-semibold"
@@ -145,6 +187,7 @@ const ProductDetail = () => {
                 Mô tả chi tiết
               </button>
             </li>
+
             <li className="nav-item">
               <button
                 className="nav-link fw-semibold"
@@ -157,18 +200,19 @@ const ProductDetail = () => {
           </ul>
 
           <div className="tab-content">
+            {/* ⭐ MÔ TẢ CÓ ĐỌC THÊM */}
             <div className="tab-pane fade show active" id="desc">
-              <p className="text-secondary">{product.mota}</p>
+              <DescriptionSection text={product.mota} />
             </div>
 
-            {/* 💬 Bình luận */}
+            {/* COMMENTS */}
             <div className="tab-pane fade" id="review">
               <h5 className="fw-bold mb-3 text-dark">Bình luận</h5>
+
               {loadingComments ? (
                 <p className="text-muted">Đang tải bình luận...</p>
               ) : (
                 <>
-                  {/* Form nhập bình luận */}
                   <form
                     onSubmit={handleSubmitComment}
                     className="p-3 rounded-3 border bg-light mb-4 shadow-sm"
@@ -176,10 +220,11 @@ const ProductDetail = () => {
                     <textarea
                       className="form-control mb-3 border-0 shadow-sm"
                       rows="3"
-                      placeholder="Hãy chia sẻ cảm nhận của bạn..."
+                      placeholder="Chia sẻ cảm nhận của bạn..."
                       value={newComment}
                       onChange={(e) => setNewComment(e.target.value)}
                     ></textarea>
+
                     <div className="text-end">
                       <button
                         type="submit"
@@ -190,7 +235,6 @@ const ProductDetail = () => {
                     </div>
                   </form>
 
-                  {/* Danh sách bình luận */}
                   {comments.length === 0 ? (
                     <p className="text-muted">Chưa có bình luận nào.</p>
                   ) : (
@@ -201,9 +245,8 @@ const ProductDetail = () => {
                           className="list-group-item border-0 border-bottom py-3"
                         >
                           <div className="d-flex align-items-start">
-                            <div className="me-3">
-                              <i className="bi bi-person-circle fs-3 text-primary"></i>
-                            </div>
+                            <i className="bi bi-person-circle fs-3 text-primary me-3"></i>
+
                             <div>
                               <h6 className="fw-semibold mb-1 text-dark">
                                 {c.user?.fullname || "Người dùng"}
@@ -223,7 +266,7 @@ const ProductDetail = () => {
             </div>
           </div>
         </div>
-        {/*  SẢN PHẨM LIÊN QUAN */}
+
         {related.length > 0 && (
           <div className="mt-5 bg-white rounded-4 p-4 shadow-sm border">
             <h4 className="fw-bold mb-3 text-dark">Sản phẩm liên quan</h4>
@@ -259,8 +302,8 @@ const ProductDetail = () => {
 
                                 <div className="card-body text-center">
                                   <h6 className="fw-bold text-dark">
-                                    {item.tensp.length > 40
-                                      ? item.tensp.substring(0, 40) + "..."
+                                    {item.tensp.length > 50
+                                      ? item.tensp.substring(0, 50) + "..."
                                       : item.tensp}
                                   </h6>
 
@@ -286,7 +329,6 @@ const ProductDetail = () => {
                 )}
               </div>
 
-              {/* Nút chuyển slide */}
               <button
                 className="carousel-control-prev"
                 type="button"
@@ -309,13 +351,11 @@ const ProductDetail = () => {
         )}
       </div>
 
-      {/* CSS */}
       <style>{`
         body {
           background-color: #f8f9fa;
         }
         .detail-page {
-          background-color: #f8f9fa;
           min-height: 100vh;
         }
         .nav-tabs .nav-link.active {
@@ -330,8 +370,10 @@ const ProductDetail = () => {
         .nav-tabs .nav-link:hover {
           color: #0d6efd;
         }
-        textarea:focus {
-          box-shadow: 0 0 0 0.15rem rgba(13,110,253,0.25);
+        .icon-bg {
+          background: #ffeaea;
+          padding: 10px;
+          border-radius: 12px;
         }
       `}</style>
     </div>
@@ -339,3 +381,31 @@ const ProductDetail = () => {
 };
 
 export default ProductDetail;
+
+export const DescriptionSection = ({ text }) => {
+  const [expanded, setExpanded] = useState(false);
+
+  const LIMIT = 350;
+  const isLong = text.length > LIMIT;
+  const shown = expanded ? text : text.slice(0, LIMIT) + (isLong ? "..." : "");
+
+  return (
+    <div>
+      <p
+        className="text-secondary fs-6"
+        style={{ whiteSpace: "pre-line", lineHeight: "1.7" }}
+      >
+        {shown}
+      </p>
+
+      {isLong && (
+        <button
+          className="btn btn-outline-primary btn-sm rounded-pill fw-semibold"
+          onClick={() => setExpanded(!expanded)}
+        >
+          {expanded ? "Thu gọn" : "Đọc tiếp"}
+        </button>
+      )}
+    </div>
+  );
+};
