@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
 import "../components/css/dashboard.css";
+import { getAdminStats, getAdminStatsByMonth } from "../API/Stats";
 
 import AdminProducts from "./adminproduct";
 import ChuyenMucManager from "./admintopic";
@@ -11,16 +12,20 @@ import ChatAdmin from "./adminchat";
 import AdminKho from "./adminkho";
 import AdminAccount from "./adminAccount";
 import AdminComment from "./admincomments";
+import AdminCarousel from "./admincarousel";
+import AdminNhaCungCap from "./adminnhacungcap";
 
 const Adminpage = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const barChartRef = useRef(null);
-  const pieChartRef = useRef(null);
-  const barChartInstance = useRef(null);
-  const pieChartInstance = useRef(null);
 
-  // Mock data động
+  // CHART refs
+  const barChartRef = useRef(null);
+  const bestChartRef = useRef(null);
+
+  const barChartInstance = useRef(null);
+  const bestChartInstance = useRef(null);
+
   const [stats, setStats] = useState({
     revenue: 0,
     products: 0,
@@ -28,56 +33,80 @@ const Adminpage = () => {
     users: 0,
   });
 
+  const [revenueChart, setRevenueChart] = useState({
+    labels: [],
+    data: [],
+  });
+
+  const [bestProducts, setBestProducts] = useState([]);
+
   useEffect(() => {
-    // Animate stats
-    const targets = {
-      revenue: 125000000,
-      products: 342,
-      orders: 89,
-      users: 1204,
+    const fetchStats = async () => {
+      try {
+        const res = await getAdminStats();
+
+        setStats({
+          revenue: res.doanh_thu || 0,
+          products: res.san_pham_ban_chay?.length || 0,
+          orders: res.tong_don_hang || 0,
+          users: res.nguoi_dung_moi || 0,
+        });
+
+        setBestProducts(res.san_pham_ban_chay || []);
+      } catch (err) {
+        console.error("Lỗi load stats", err);
+      }
     };
-    const duration = 2000;
-    const steps = 60;
-    let currentStep = 0;
 
-    const timer = setInterval(() => {
-      currentStep++;
-      const progress = currentStep / steps;
-      setStats({
-        revenue: Math.floor(targets.revenue * progress),
-        products: Math.floor(targets.products * progress),
-        orders: Math.floor(targets.orders * progress),
-        users: Math.floor(targets.users * progress),
-      });
-      if (currentStep >= steps) clearInterval(timer);
-    }, duration / steps);
-
-    return () => clearInterval(timer);
+    fetchStats();
   }, []);
 
   useEffect(() => {
     if (activeTab !== "dashboard") return;
 
+    const fetchRevenue = async () => {
+      try {
+        const data = await getAdminStatsByMonth();
+
+        setRevenueChart({
+          labels: data.map((i) => `Th ${i.month}`),
+          data: data.map((i) => i.total),
+        });
+      } catch (err) {
+        console.error("Lỗi load doanh thu tháng:", err);
+      }
+    };
+
+    fetchRevenue();
+  }, [activeTab]);
+
+  useEffect(() => {
+    if (activeTab !== "dashboard") return;
+
     const ctxBar = barChartRef.current?.getContext("2d");
-    const ctxPie = pieChartRef.current?.getContext("2d");
-    if (!ctxBar || !ctxPie) return;
+    const ctxBest = bestChartRef.current?.getContext("2d");
+
+    if (!ctxBar || !ctxBest) return;
 
     barChartInstance.current?.destroy();
-    pieChartInstance.current?.destroy();
+    bestChartInstance.current?.destroy();
 
-    // Doanh thu tuần
+    const gradientBar = ctxBar.createLinearGradient(0, 0, 0, 300);
+    gradientBar.addColorStop(0, "rgba(0, 123, 255, 0.9)");
+    gradientBar.addColorStop(1, "rgba(0, 123, 255, 0.3)");
+
     barChartInstance.current = new Chart(ctxBar, {
       type: "bar",
       data: {
-        labels: ["T2", "T3", "T4", "T5", "T6", "T7", "CN"],
+        labels: revenueChart.labels,
         datasets: [
           {
-            label: "Doanh thu (triệu ₫)",
-            data: [12, 19, 15, 25, 18, 22, 30],
-            backgroundColor: "rgba(0, 123, 255, 0.8)",
-            borderColor: "#007bff",
+            label: "Doanh thu (VND)",
+            data: revenueChart.data,
+            backgroundColor: gradientBar,
+            borderColor: "rgba(0, 123, 255, 1)",
             borderWidth: 1,
-            borderRadius: 10,
+            borderRadius: 12,
             borderSkipped: false,
           },
         ],
@@ -89,49 +118,60 @@ const Adminpage = () => {
           legend: { display: false },
           tooltip: {
             backgroundColor: "rgba(0,0,0,0.8)",
-            cornerRadius: 8,
+            titleFont: { size: 14 },
+            bodyFont: { size: 13 },
+            padding: 10,
+            callbacks: {
+              label: (context) => context.raw.toLocaleString("vi-VN") + " đ",
+            },
           },
         },
         scales: {
-          y: { beginAtZero: true, grid: { display: false } },
-          x: { grid: { display: false } },
+          y: {
+            beginAtZero: true,
+            grid: { color: "rgba(0,0,0,0.05)" },
+            ticks: { font: { size: 12 } },
+          },
+          x: {
+            grid: { display: false },
+            ticks: { font: { size: 12 } },
+          },
         },
       },
     });
 
-    // Nguồn truy cập
-    pieChartInstance.current = new Chart(ctxPie, {
-      type: "doughnut",
+    bestChartInstance.current = new Chart(ctxBest, {
+      type: "bar",
       data: {
-        labels: ["Website", "Facebook", "Zalo", "Google"],
+        labels: bestProducts.map((p) => p.sanpham?.tensp || "Không có"),
         datasets: [
           {
-            data: [45, 25, 20, 10],
-            backgroundColor: ["#007bff", "#17a2b8", "#20c997", "#ffc107"],
-            borderWidth: 4,
-            borderColor: "#fff",
-            hoverBorderWidth: 6,
+            label: "Đã bán",
+            data: bestProducts.map((p) => p.tong_ban),
+            backgroundColor: "rgba(255, 159, 64, 0.8)",
+            borderColor: "rgb(255, 159, 64)",
+            borderWidth: 1,
+            borderRadius: 8,
+            borderSkipped: false,
           },
         ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: "bottom",
-            labels: { padding: 20, font: { size: 12 } },
-          },
+        indexAxis: "y",
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { beginAtZero: true },
         },
-        cutout: "70%",
       },
     });
 
     return () => {
       barChartInstance.current?.destroy();
-      pieChartInstance.current?.destroy();
+      bestChartInstance.current?.destroy();
     };
-  }, [activeTab]);
+  }, [activeTab, revenueChart, bestProducts]);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -196,12 +236,13 @@ const Adminpage = () => {
 
             {/* Charts */}
             <div className="row g-4">
+              {/* DOANH THU */}
               <div className="col-lg-8">
                 <div className="card border-0 shadow-sm rounded-4 h-100">
                   <div className="card-body">
                     <h6 className="fw-bold text-primary mb-3">
                       <i className="fa-solid fa-chart-column me-2"></i>
-                      Doanh thu tuần này
+                      Doanh thu theo tháng
                     </h6>
                     <div style={{ height: "300px" }}>
                       <canvas ref={barChartRef}></canvas>
@@ -209,15 +250,17 @@ const Adminpage = () => {
                   </div>
                 </div>
               </div>
+
+              {/* SẢN PHẨM BÁN CHẠY */}
               <div className="col-lg-4">
                 <div className="card border-0 shadow-sm rounded-4 h-100">
                   <div className="card-body">
                     <h6 className="fw-bold text-primary mb-3">
-                      <i className="fa-solid fa-pie-chart me-2"></i>
-                      Nguồn truy cập
+                      <i className="fa-solid fa-fire me-2"></i>
+                      Top sản phẩm bán chạy
                     </h6>
                     <div style={{ height: "300px" }}>
-                      <canvas ref={pieChartRef}></canvas>
+                      <canvas ref={bestChartRef}></canvas>
                     </div>
                   </div>
                 </div>
@@ -244,11 +287,19 @@ const Adminpage = () => {
         return <ChatAdmin />;
       case "kho":
         return <AdminKho />;
+      case "carousel":
+        return <AdminCarousel />;
+      case "nhacungcap":
+        return <AdminNhaCungCap />;
+
       default:
         return <p className="text-muted">Chọn chức năng ở thanh bên trái.</p>;
     }
   };
 
+  // ===============================
+  // GIAO DIỆN TỔNG
+  // ===============================
   return (
     <div className="d-flex bg-light" style={{ minHeight: "100vh" }}>
       {/* Sidebar */}
@@ -280,18 +331,25 @@ const Adminpage = () => {
           </button>
         </div>
 
+        {/* SIDEBAR MENU */}
         <nav className="nav flex-column flex-grow-1">
           {[
             { id: "dashboard", icon: "fa-house", label: "Dashboard" },
-            { id: "taikhoan", icon: "fa-house", label: "Quản lý Account" },
-            { id: "binhluan", icon: "fa-house", label: "Quản lý Comments" },
-            { id: "hang", icon: "fa-layer-group", label: "Quản lý Hãng" },
+            { id: "taikhoan", icon: "fa-user", label: "Quản lý Account" },
+            { id: "binhluan", icon: "fa-comments", label: "Quản lý Comments" },
+            { id: "hang", icon: "fa-building", label: "Quản lý Hãng" },
             { id: "chuyenmuc", icon: "fa-icons", label: "Quản lý Chuyên mục" },
             { id: "danhmuc", icon: "fa-folder", label: "Quản lý Danh mục" },
             { id: "sanpham", icon: "fa-box", label: "Quản lý Sản phẩm" },
-            { id: "donhang", icon: "fa-box", label: "Quản lý Đơn hàng" },
-            { id: "chat", icon: "fa-box", label: "Quản lý chat" },
-            { id: "kho", icon: "fa-box", label: "Quản lý kho" },
+            {
+              id: "donhang",
+              icon: "fa-cart-shopping",
+              label: "Quản lý Đơn hàng",
+            },
+            { id: "chat", icon: "fa-message", label: "Quản lý chat" },
+            { id: "kho", icon: "fa-warehouse", label: "Quản lý kho" },
+            { id: "carousel", icon: "fa-image", label: "Quản lý carousel" },
+            { id: "nhacungcap", icon: "fa-image", label: "Quản lý NCC" },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -318,7 +376,7 @@ const Adminpage = () => {
         </div>
       </aside>
 
-      {/* Main Content */}
+      {/* MAIN CONTENT */}
       <main
         className="flex-grow-1 p-4 position-relative overflow-auto"
         style={{
