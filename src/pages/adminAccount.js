@@ -25,6 +25,31 @@ const AdminAccount = () => {
     setLoading(false);
   };
 
+  const handleDelete = async (id) => {
+    const confirm = await Swal.fire({
+      title: "Xóa tài khoản?",
+      text: "Bạn có chắc muốn xóa tài khoản này? Hành động này không thể hoàn tác!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Xóa",
+      cancelButtonText: "Hủy",
+      confirmButtonColor: "#d33",
+    });
+
+    if (!confirm.isConfirmed) return;
+
+    try {
+      await deleteAccount(id);
+
+      Swal.fire("Thành công!", "Tài khoản đã được xóa.", "success");
+
+      // reload danh sách
+      loadAccounts();
+    } catch (err) {
+      Swal.fire("Lỗi!", "Không thể xóa tài khoản.", "error");
+    }
+  };
+
   const filtered = accounts.filter((a) => {
     const q = search.toLowerCase();
     return (
@@ -59,7 +84,7 @@ const AdminAccount = () => {
               <th>SĐT</th>
               <th>Địa chỉ</th>
               <th>Loại</th>
-              <th>Chi tiết</th>
+              <th>Hành động</th>
             </tr>
           </thead>
           <tbody>
@@ -74,28 +99,50 @@ const AdminAccount = () => {
                 <td>
                   <span
                     className={`badge ${
-                      acc.loaiTK === "admin"
+                      acc.loaiTK === 1
                         ? "bg-warning text-dark"
+                        : acc.loaiTK === 2
+                        ? "bg-primary"
                         : "bg-secondary"
                     }`}
                   >
-                    {acc.loaiTK}
+                    {acc.loaiTK === 1
+                      ? "Admin"
+                      : acc.loaiTK === 2
+                      ? "User"
+                      : "Guest"}
                   </span>
                 </td>
                 <td>
                   <button
-                    className="btn btn-sm btn-info"
+                    className="btn btn-sm btn-info me-2"
                     onClick={() => navigate(`/admin/account/${acc.id}`)}
                   >
-                    Xem chi tiết
+                    Xem
+                  </button>
+
+                  <button
+                    className="btn btn-sm btn-danger"
+                    onClick={() => handleDelete(acc.id)}
+                  >
+                    Xóa
                   </button>
                 </td>
               </tr>
             ))}
-            {filtered.length === 0 && (
+
+            {filtered.length === 0 && !loading && (
               <tr>
                 <td colSpan="8" className="text-center py-4 text-muted">
                   Không có tài khoản nào
+                </td>
+              </tr>
+            )}
+
+            {loading && (
+              <tr>
+                <td colSpan="8" className="text-center py-4 text-muted">
+                  Đang tải...
                 </td>
               </tr>
             )}

@@ -3,15 +3,25 @@ import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
 
-import { getAccountById } from "../API/Account";
+import { getAccountById, updateAccount } from "../API/Account";
 import { getOrdersByUser } from "../API/Checkout";
 import { getCommentsByUserAdmin } from "../API/Comment";
+
 const AdminAccountDetail = () => {
   const { id } = useParams();
 
   const [account, setAccount] = useState(null);
   const [orders, setOrders] = useState([]);
   const [comments, setComments] = useState([]);
+
+  // Form update state
+  const [editData, setEditData] = useState({
+    fullname: "",
+    email: "",
+    sdt: "",
+    diachi: "",
+    loaiTK: "",
+  });
 
   useEffect(() => {
     loadData();
@@ -26,9 +36,40 @@ const AdminAccountDetail = () => {
       setAccount(acc);
       setOrders(ord);
       setComments(cmt);
+
+      setEditData({
+        fullname: acc.fullname || "",
+        email: acc.email || "",
+        sdt: acc.sdt || "",
+        diachi: acc.diachi || "",
+        loaiTK: acc.loaiTK || "user",
+      });
     } catch (err) {
       Swal.fire("Lỗi!", "Không thể tải dữ liệu tài khoản", "error");
     }
+  };
+
+  const handleSave = async () => {
+    Swal.fire({
+      title: "Xác nhận",
+      text: "Bạn có chắc muốn cập nhật tài khoản?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Cập nhật",
+      cancelButtonText: "Hủy",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await updateAccount(id, editData);
+          Swal.fire("Thành công!", "Tài khoản đã được cập nhật", "success");
+
+          // Reload data
+          loadData();
+        } catch (err) {
+          Swal.fire("Lỗi!", "Cập nhật thất bại", "error");
+        }
+      }
+    });
   };
 
   if (!account) return <div className="text-center py-5">Đang tải...</div>;
@@ -45,36 +86,76 @@ const AdminAccountDetail = () => {
           Chi tiết tài khoản: {account.username}
         </h3>
 
-        {/* THÔNG TIN TÀI KHOẢN */}
+        {/* FORM UPDATE TÀI KHOẢN */}
         <div className="card shadow-sm p-3 mb-4">
-          <h5 className="fw-bold mb-3">Thông tin cá nhân</h5>
-          <p>
-            <b>Họ tên:</b> {account.fullname}
-          </p>
-          <p>
-            <b>Email:</b> {account.email}
-          </p>
-          <p>
-            <b>SĐT:</b> {account.sdt}
-          </p>
-          <p>
-            <b>Địa chỉ:</b> {account.diachi}
-          </p>
-          <p>
-            <b>Loại TK:</b>{" "}
-            <span
-              className={`badge ${
-                account.loaiTK === "admin"
-                  ? "bg-warning text-dark"
-                  : "bg-secondary"
-              }`}
-            >
-              {account.loaiTK}
-            </span>
-          </p>
+          <h5 className="fw-bold mb-3">Chỉnh sửa thông tin</h5>
+
+          <div className="row">
+            <div className="col-md-6 mb-3">
+              <label>Họ tên</label>
+              <input
+                className="form-control"
+                value={editData.fullname}
+                onChange={(e) =>
+                  setEditData({ ...editData, fullname: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="col-md-6 mb-3">
+              <label>Email</label>
+              <input
+                className="form-control"
+                value={editData.email}
+                onChange={(e) =>
+                  setEditData({ ...editData, email: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="col-md-6 mb-3">
+              <label>Số điện thoại</label>
+              <input
+                className="form-control"
+                value={editData.sdt}
+                onChange={(e) =>
+                  setEditData({ ...editData, sdt: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="col-md-6 mb-3">
+              <label>Địa chỉ</label>
+              <input
+                className="form-control"
+                value={editData.diachi}
+                onChange={(e) =>
+                  setEditData({ ...editData, diachi: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="col-md-6 mb-3">
+              <label>Loại tài khoản</label>
+              <select
+                className="form-select"
+                value={editData.loaiTK}
+                onChange={(e) =>
+                  setEditData({ ...editData, loaiTK: e.target.value })
+                }
+              >
+                <option value={2}>user</option>
+                <option value={1}>admin</option>
+              </select>
+            </div>
+          </div>
+
+          <button className="btn btn-success mt-3" onClick={handleSave}>
+            Lưu thay đổi
+          </button>
         </div>
 
-        {/* ĐƠN HÀNG ĐÃ MUA */}
+        {/* ĐƠN HÀNG */}
         <div className="card shadow-sm p-3 mb-4">
           <h5 className="fw-bold mb-3">Đơn hàng đã mua</h5>
 

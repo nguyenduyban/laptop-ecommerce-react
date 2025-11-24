@@ -59,7 +59,6 @@ const AdminComment = () => {
               <th>Người dùng</th>
               <th>Nội dung</th>
               <th>Sản phẩm</th>
-              <th>Trạng thái</th>
               <th>Hành động</th>
             </tr>
           </thead>
@@ -70,16 +69,7 @@ const AdminComment = () => {
                 <td>{c.user?.fullname || "Không rõ"}</td>
                 <td>{c.noidung}</td>
                 <td>{c.sanpham?.tensp}</td>
-                <td>
-                  <select
-                    value={c.trangthai}
-                    onChange={(e) => handleStatusChange(c.id, e.target.value)}
-                    className="form-select"
-                  >
-                    <option value="pending">pending</option>
-                    <option value="duyệt">duyệt</option>
-                  </select>
-                </td>
+
                 <td>
                   <button
                     className="btn btn-danger btn-sm"
