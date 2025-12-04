@@ -42,7 +42,7 @@ import AdminNhaCungCap from "./pages/adminnhacungcap.js";
 function App() {
   return (
     <>
-      <GoogleOAuthProvider clientId="43694407933-4gs09vcbhv2f3rm03j04sqt6r0tmkfh6.apps.googleusercontent.com">
+      <GoogleOAuthProvider clientId="70477090360-2ue7k7ro5p3430dqqsgn59sa8spuc8uo.apps.googleusercontent.com">
         <AuthProvider>
           <Navbar />
           <Routes>
