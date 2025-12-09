@@ -67,7 +67,7 @@ const UserProfile = () => {
               src={
                 user.avatar
                   ? `https://ecommerce-laravel.up.railway.app/storage/avatars/${user.avatar}`
-                  : "https://ecommerce-laravel.up.railway.app/storage/img/account.png"
+                  : "https://cdn-icons-png.flaticon.com/512/149/149071.png"
               }
               alt="avatar"
               className="rounded-circle"
