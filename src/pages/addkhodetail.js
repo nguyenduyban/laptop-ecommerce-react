@@ -10,7 +10,6 @@ const AddKhoDetail = () => {
 
   const [soluong, setSoluong] = useState("");
   const [giaMua, setGiaMua] = useState("");
-  const [giaBan, setGiaBan] = useState("");
   const [ncc, setNcc] = useState("");
   const [ngayBHStart, setNgayBHStart] = useState("");
   const [ngayBHEnd, setNgayBHEnd] = useState("");
@@ -34,7 +33,7 @@ const AddKhoDetail = () => {
 
   // ==================== SUBMIT ====================
   const handleSubmit = async () => {
-    if (!soluong || !giaMua || !giaBan) {
+    if (!soluong || !giaMua) {
       Swal.fire("Cảnh báo", "Vui lòng nhập đầy đủ thông tin", "warning");
       return;
     }
@@ -44,7 +43,6 @@ const AddKhoDetail = () => {
         masp: masp,
         soluong_nhap: Number(soluong),
         gia_mua: Number(giaMua),
-        gia_ban: Number(giaBan),
         id_ncc: ncc ? Number(ncc) : null,
         ngay_bao_hanh: ngayBHStart || null,
         han_bao_hanh: ngayBHEnd || null,
@@ -84,15 +82,6 @@ const AddKhoDetail = () => {
         />
       </div>
 
-      <div className="mb-3">
-        <label>Giá bán</label>
-        <input
-          type="number"
-          className="form-control"
-          value={giaBan}
-          onChange={(e) => setGiaBan(e.target.value)}
-        />
-      </div>
 
       <div className="mb-3">
         <label>Nhà cung cấp</label>
