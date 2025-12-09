@@ -61,7 +61,6 @@ const Khodetail = () => {
               <th>Nhà cung cấp</th>
               <th>Số lượng</th>
               <th>Giá mua</th>
-              <th>Giá bán</th>
               <th>Ngày nhập</th>
               <th>Bắt đầu BH</th>
               <th>Hết BH</th>
@@ -87,7 +86,6 @@ const Khodetail = () => {
                   <td>{r.nhacungcap?.ten || "Chưa có NCC"}</td>
                   <td>{numberVN(r.soluong_nhap)}</td>
                   <td>{numberVN(r.gia_mua)}</td>
-                  <td>{numberVN(r.gia_ban)}</td>
                   <td>{new Date(r.created_at).toLocaleDateString("vi-VN")}</td>
                   <td>{formatDate(r.ngay_bao_hanh)}</td>
                   <td>{formatDate(r.han_bao_hanh)}</td>
