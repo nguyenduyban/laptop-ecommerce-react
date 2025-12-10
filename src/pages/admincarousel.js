@@ -67,11 +67,11 @@ const AdminCarousel = () => {
 
   return (
     <div className="container mt-4">
-      <h2 className="fw-bold">Quản lý Slideshow (Carousel)</h2>
+      <h2 className="fw-bold">Quản lý Banner</h2>
 
       {/* FORM */}
       <form className="mt-4" onSubmit={handleSubmit}>
-        <label className="fw-bold">Ảnh slideshow:</label>
+        <label className="fw-bold">Ảnh:</label>
         <input type="file" className="form-control" onChange={handleFile} />
 
         {preview && (
@@ -112,7 +112,7 @@ const AdminCarousel = () => {
       </form>
 
       {/* TABLE */}
-      <h3 className="mt-4">Danh sách slideshow</h3>
+      <h3 className="mt-4">Danh sách banner</h3>
       <table className="table table-bordered mt-2">
         <thead>
           <tr>
@@ -126,7 +126,7 @@ const AdminCarousel = () => {
           {slides.length === 0 ? (
             <tr>
               <td colSpan="4" className="text-center">
-                Không có slideshow nào
+                Không có banner nào
               </td>
             </tr>
           ) : (

@@ -348,7 +348,7 @@ const Adminpage = () => {
             },
             { id: "chat", icon: "fa-message", label: "Quản lý Chat" },
             { id: "kho", icon: "fa-warehouse", label: "Quản lý Kho" },
-            { id: "carousel", icon: "fa-image", label: "Quản lý Benner" },
+            { id: "carousel", icon: "fa-image", label: "Quản lý Banner" },
             { id: "nhacungcap", icon: "fa-image", label: "Quản lý Nhà Cung Cấp" },
           ].map((tab) => (
             <button
