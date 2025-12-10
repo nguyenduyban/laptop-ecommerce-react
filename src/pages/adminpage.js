@@ -335,8 +335,8 @@ const Adminpage = () => {
         <nav className="nav flex-column flex-grow-1">
           {[
             { id: "dashboard", icon: "fa-house", label: "Dashboard" },
-            { id: "taikhoan", icon: "fa-user", label: "Quản lý Account" },
-            { id: "binhluan", icon: "fa-comments", label: "Quản lý Comments" },
+            { id: "taikhoan", icon: "fa-user", label: "Quản lý Tài Khoản" },
+            { id: "binhluan", icon: "fa-comments", label: "Quản lý Bình Luận" },
             { id: "hang", icon: "fa-building", label: "Quản lý Hãng" },
             { id: "chuyenmuc", icon: "fa-icons", label: "Quản lý Chuyên mục" },
             { id: "danhmuc", icon: "fa-folder", label: "Quản lý Danh mục" },
@@ -346,10 +346,10 @@ const Adminpage = () => {
               icon: "fa-cart-shopping",
               label: "Quản lý Đơn hàng",
             },
-            { id: "chat", icon: "fa-message", label: "Quản lý chat" },
-            { id: "kho", icon: "fa-warehouse", label: "Quản lý kho" },
-            { id: "carousel", icon: "fa-image", label: "Quản lý carousel" },
-            { id: "nhacungcap", icon: "fa-image", label: "Quản lý NCC" },
+            { id: "chat", icon: "fa-message", label: "Quản lý Chat" },
+            { id: "kho", icon: "fa-warehouse", label: "Quản lý Kho" },
+            { id: "carousel", icon: "fa-image", label: "Quản lý Benner" },
+            { id: "nhacungcap", icon: "fa-image", label: "Quản lý Nhà Cung Cấp" },
           ].map((tab) => (
             <button
               key={tab.id}
