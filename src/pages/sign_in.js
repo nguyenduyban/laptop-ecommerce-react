@@ -119,7 +119,7 @@ const Signinpage = () => {
                     <i className="bi bi-lock-fill"></i>
                   </span>
                   <input
-                    type="text"
+                    type="tel"
                     name="sdt"
                     value={formData.sdt}
                     onChange={handleChange}
