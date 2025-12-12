@@ -38,6 +38,7 @@ import AdminCarousel from "./pages/admincarousel.js";
 import AddKhoDetail from "./pages/addkhodetail.js";
 import Khodetail from "./pages/khodetail.js";
 import AdminNhaCungCap from "./pages/adminnhacungcap.js";
+import Aboutpage from "./pages/contact.js";
 
 function App() {
   return (
@@ -224,6 +225,7 @@ function App() {
             <Route path="/search" element={<SearchResults />} />
             <Route path="/product/:masp" element={<ProductDetail />} />
             <Route path="/thanh-toan-thanh-cong" element={<SuccessPage />} />
+            <Route path="/about" element={<Aboutpage />} />
           </Routes>
           <Chatbot />
           <Footer />
