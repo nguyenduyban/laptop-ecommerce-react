@@ -8,22 +8,21 @@ const Signinpage = () => {
     username: "",
     email: "",
     password: "",
-    confirmPassword: "",
+    fullname: "",
+    diachi: "",
+    sdt: "",
   });
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  // 🟢 Xử lý khi nhập dữ liệu
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // 🟣 Gửi form
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
-    
 
     setLoading(true);
     try {
@@ -32,11 +31,18 @@ const Signinpage = () => {
         email: formData.email,
         password: formData.password,
         fullname: formData.fullname,
-        diachi:formData.diachi,
-        sdt:formData.sdt,
+        diachi: formData.diachi,
+        sdt: formData.sdt,
       });
       setMessage("✅ Đăng ký thành công! Vui lòng đăng nhập.");
-      setFormData({ username: "", email: "", password: "", diachi: "",fullname:"",sdt:"" });
+      setFormData({
+        username: "",
+        email: "",
+        password: "",
+        diachi: "",
+        fullname: "",
+        sdt: "",
+      });
     } catch (err) {
       setMessage(err.message || "❌ Đăng ký thất bại!");
     } finally {
@@ -119,12 +125,16 @@ const Signinpage = () => {
                     <i className="bi bi-lock-fill"></i>
                   </span>
                   <input
-                    type="tel"
+                    type="text"
                     name="sdt"
                     value={formData.sdt}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      const onlyNums = e.target.value.replace(/\D/g, "");
+                      setFormData({ ...formData, sdt: onlyNums });
+                    }}
                     className="form-control border-start-0"
-                    placeholder="SDT"
+                    placeholder="SỐ ĐIỆN THOẠI"
+                    maxLength={10}
                     required
                   />
                 </div>
@@ -145,7 +155,7 @@ const Signinpage = () => {
                   />
                 </div>
               </div>
-              
+
               {/* Email */}
               <div className="mb-3">
                 <div className="input-group">
@@ -163,7 +173,6 @@ const Signinpage = () => {
                   />
                 </div>
               </div>
-
 
               {/* Button */}
               <div className="d-grid mb-3">
