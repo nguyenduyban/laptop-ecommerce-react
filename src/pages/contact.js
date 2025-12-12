@@ -58,7 +58,7 @@ const Aboutpage = () => {
 
             {/* Founder Image */}
             <img
-              src="https://ecommerce-laravel.up.railway.app/storage/img/gus.jpg"
+              src="/storage/img/gus.jpg"
               alt="Founder"
               className="img-fluid position-relative"
               style={{ zIndex: 2, maxHeight: "420px" }}
