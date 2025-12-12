@@ -76,7 +76,7 @@ const Navbar = () => {
             {[
               { to: "/", label: "Trang chủ", icon: "bi-house-door" },
               { to: "/product", label: "Sản phẩm", icon: "bi-bag" },
-              { to: "/contact", label: "Liên hệ", icon: "bi-envelope" },
+              { to: "/about", label: "Liên hệ", icon: "bi-envelope" },
               { to: "/cart", label: "Giỏ hàng", icon: "fa fa-cart-plus" },
             ].map((item, i) => (
               <li key={i} className="nav-item">
