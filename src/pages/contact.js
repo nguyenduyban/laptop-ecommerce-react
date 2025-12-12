@@ -41,29 +41,37 @@ const Aboutpage = () => {
             </p>
           </div>
 
-          <div className="col-lg-6 text-center position-relative">
-            <div
-              style={{
-                position: "absolute",
-                top: "10%",
-                right: "10%",
-                width: "300px",
-                height: "300px",
-                border: "3px solid #0d6efd",
-                borderRadius: "20px",
-                zIndex: 1,
-                transform: "rotate(10deg)",
-              }}
-            ></div>
+                      <div className="col-lg-6 text-center position-relative">
+              {/* Decorative Frame */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  width: "360px",
+                  height: "420px",
+                  border: "4px solid #0d6efd",
+                  borderRadius: "25px",
+                  transform: "translate(-50%, -50%) rotate(8deg)",
+                  zIndex: 1,
+                  opacity: 0.9,
+                }}
+              ></div>
 
-            {/* Founder Image */}
-            <img
-              src="https://ecommerce-laravel.up.railway.app/storage/img/gus.jpg"
-              alt="Founder"
-              className="img-fluid position-relative"
-              style={{ zIndex: 2, maxHeight: "420px" }}
-            />
-          </div>
+              {/* Main Image */}
+              <img
+                src="https://ecommerce-laravel.up.railway.app/storage/img/gus.jpg"
+                alt="Founder"
+                className="img-fluid shadow-lg"
+                style={{
+                  zIndex: 2,
+                  position: "relative",
+                  borderRadius: "25px",
+                  maxHeight: "420px",
+                  objectFit: "cover",
+                }}
+              />
+            </div>
         </div>
 
         {/* QUOTE SECTION */}
